@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pb-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8ABFFF" />
+      <stop offset="50%" stop-color="#4C9FFF" />
+      <stop offset="100%" stop-color="#1B55B0" />
+    </linearGradient>
+    <linearGradient id="pb-glow" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#8ABFFF" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#4C9FFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Outer Shield / Precision Frame -->
+  <rect x="3" y="3" width="42" height="42" rx="10" fill="#0B1425" stroke="#1E2F4D" stroke-width="1.5" />
+  
+  <!-- Subtle Internal Grid Coordinates -->
+  <line x1="3" y1="24" x2="45" y2="24" stroke="#162742" stroke-width="0.75" stroke-dasharray="2 2" />
+  <line x1="24" y1="3" x2="24" y2="45" stroke="#162742" stroke-width="0.75" stroke-dasharray="2 2" />
+
+  <!-- Pipe Band Harmonic Triple Drones & Chanter Architecture -->
+  <!-- Bass Drone (Central, Tall) -->
+  <rect x="22" y="8" width="4" height="32" rx="1.5" fill="url(#pb-grad)" />
+  <circle cx="24" cy="7" r="2.2" fill="#8ABFFF" />
+  <!-- Tuning Slides / Ferrules on Central Drone -->
+  <rect x="21" y="15" width="6" height="2" rx="0.5" fill="#F5F8FC" opacity="0.9" />
+  <rect x="21" y="27" width="6" height="2" rx="0.5" fill="#F5F8FC" opacity="0.9" />
+
+  <!-- Tenor Drone Left -->
+  <rect x="13" y="13" width="3.5" height="25" rx="1.2" fill="#4C9FFF" />
+  <circle cx="14.75" cy="12" r="1.8" fill="#8ABFFF" />
+  <rect x="12.25" y="21" width="5" height="1.8" rx="0.5" fill="#F5F8FC" opacity="0.8" />
+
+  <!-- Tenor Drone Right -->
+  <rect x="31.5" y="13" width="3.5" height="25" rx="1.2" fill="#4C9FFF" />
+  <circle cx="33.25" cy="12" r="1.8" fill="#8ABFFF" />
+  <rect x="30.75" y="21" width="5" height="1.8" rx="0.5" fill="#F5F8FC" opacity="0.8" />
+
+  <!-- Acoustic Harmonic Arcs (representing pipe band sound projection & championship stadium staves) -->
+  <path d="M 8 28 C 11 20, 16 17, 24 17 C 32 17, 37 20, 40 28" stroke="#8ABFFF" stroke-width="1.75" stroke-linecap="round" fill="none" opacity="0.85" />
+  <path d="M 10 34 C 13 28, 17 25, 24 25 C 31 25, 35 28, 38 34" stroke="#4C9FFF" stroke-width="1.25" stroke-linecap="round" fill="none" opacity="0.7" />
+  
+  <!-- Subtle Base Anchor Ribbon -->
+  <path d="M 12 39 L 24 35 L 36 39" stroke="#8ABFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

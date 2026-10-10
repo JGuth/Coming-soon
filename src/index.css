@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-midnight: #0B1425;
+    --bg-dark-navy: #11213A;
+    --bg-panel: #111B2B;
+    --electric-blue: #8ABFFF;
+    --bright-blue: #4C9FFF;
+    --text-primary: #F5F8FC;
+    --text-muted: #A7B4C7;
+  }
+
+  body {
+    background-color: var(--bg-midnight);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  code, kbd, samp, pre {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Atmospheric subtle grid background */
+.technical-grid {
+  background-image: 
+    linear-gradient(to right, rgba(138, 191, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 191, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.technical-grid-dense {
+  background-image: 
+    linear-gradient(to right, rgba(138, 191, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(138, 191, 255, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Subtle musical stave horizontal lines */
+.stave-lines {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 23px,
+    rgba(138, 191, 255, 0.025) 23px,
+    rgba(138, 191, 255, 0.025) 24px
+  );
+}
+
+/* Glow highlights */
+.radial-glow-top {
+  background: radial-gradient(circle 800px at 50% -10%, rgba(76, 159, 255, 0.14), transparent 70%);
+}
+
+.radial-glow-center {
+  background: radial-gradient(circle 600px at 50% 50%, rgba(138, 191, 255, 0.08), transparent 70%);
+}
+
+/* Subtle keyframe animations */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.9; }
+}
+
+@keyframes driftSlow {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0.5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes gridFloat {
+  0% { background-position: 0 0; }
+  100% { background-position: 48px 48px; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 4s ease-in-out infinite;
+}
+
+.animate-drift-slow {
+  animation: driftSlow 12s ease-in-out infinite;
+}
+
+.animate-grid-float {
+  animation: gridFloat 40s linear infinite;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

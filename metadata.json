@@ -1,0 +1,6 @@
+{
+  "name": "PipeBand.app",
+  "description": "The home of pipe band results, history and statistics. Discover the performances, rivalries and records that define the pipe band world.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
