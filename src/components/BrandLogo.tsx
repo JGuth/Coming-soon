@@ -34,7 +34,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         style={{ width: currentSize.width, height: currentSize.height }}
       >
         <img
-          src="/assets/logo.svg?v=3"
+          src="/assets/logo.svg?v=4"
           alt="PipeBand.app Logo"
           className="w-full h-full object-contain select-none"
         />

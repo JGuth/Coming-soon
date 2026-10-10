@@ -1,45 +1,131 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1100" fill="none">
-  <g stroke="#FFFFFF" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
-    <!-- 1. DESCENDER & LEFT STEM OF 'p' -->
-    <path d="M 105 380 L 105 920 A 40 40 0 0 0 185 920 L 185 520" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1100" fill="none" aria-label="PipeBand.app Favicon">
+  <!-- Official PipeBand.app "pb" Bagpipe Drones Monogram Favicon -->
+  <g fill="#FFFFFF" stroke="#FFFFFF">
+    <!-- 1. 'b' Loop: Annular ring (Outer R 280, Inner R 160 at center 710, 560) -->
+    <circle cx="710" cy="560" r="220" stroke-width="120" fill="none" />
 
-    <!-- 2. OUTER TOP BOWL OF 'p' -->
-    <path d="M 105 380 C 105 240, 205 250, 280 250 C 370 250, 445 250, 445 380" />
+    <!-- 2. 'b' Vertical Ascender (Stem) -->
+    <path
+      d="M 445 295 L 445 170 C 445 105, 490 60, 550 60 L 550 330 C 515 330, 480 310, 445 295 Z"
+      fill="#FFFFFF"
+      stroke="none"
+    />
 
-    <!-- 3. INNER CIRCLE OF 'p' -->
-    <circle cx="275" cy="520" r="140" />
+    <!-- 3. 'p' Descender & Left Stem with Semicircular Bottom Terminal -->
+    <path
+      d="M 80 430 L 80 925"
+      stroke-width="112"
+      stroke-linecap="round"
+      fill="none"
+    />
 
-    <!-- 4. BOTTOM SWEEPING TAIL OF 'p' -->
-    <path d="M 185 710 C 185 750, 230 760, 290 750 C 360 740, 420 700, 460 650 C 500 600, 530 670, 560 720" />
+    <!-- 4. 'p' Upper Bowl Arch (Over the circular counter at 275, 520) -->
+    <path
+      d="M 80 430 C 80 255, 190 255, 275 255 C 355 255, 420 270, 445 295"
+      stroke-width="112"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
 
-    <!-- 5. UPRIGHT ARCH OF 'b' (LEFT OF DRONES) -->
-    <path d="M 445 280 L 445 60 A 55 55 0 0 1 555 60 L 555 270" />
+    <!-- 5. 'p' Lower Bowl & Sweeping Tail with Rounded Terminal Cap -->
+    <path
+      d="M 135 600 C 135 730, 220 765, 300 765 C 370 765, 430 735, 465 675"
+      stroke-width="112"
+      stroke-linecap="round"
+      fill="none"
+    />
 
-    <!-- 6. OUTER CIRCLE OF 'b' -->
-    <circle cx="710" cy="560" r="280" />
+    <!-- 6. Solid Junction Divider between 'p' and 'b' counters -->
+    <path
+      d="M 415 340 L 550 330 L 550 560 L 415 520 Z"
+      fill="#FFFFFF"
+      stroke="none"
+    />
 
-    <!-- 7. INNER CIRCLE OF 'b' -->
-    <circle cx="710" cy="560" r="160" />
+    <!-- 7. Bass Drone (Vertical, Center X 688) -->
+    <!-- Stock collar on 'b' rim -->
+    <path d="M 668 281 C 668 265, 708 265, 708 281 Z" stroke="none" />
+    <!-- Shaft, Tuning Slide Ferrule, Neck, Flared Bell & Top Cap -->
+    <path
+      d="
+        M 684 257
+        L 684 218
+        L 674 218
+        L 674 212
+        L 676 212
+        L 676 60
+        L 661 55
+        L 661 16
+        L 715 16
+        L 715 55
+        L 700 60
+        L 700 212
+        L 702 212
+        L 702 218
+        L 692 218
+        L 692 257
+        Z
+      "
+      stroke="none"
+    />
 
-    <!-- 8. BASS DRONE (VERTICAL) -->
-    <!-- Stock -->
-    <path d="M 670 280 C 670 260, 710 260, 710 280" />
-    <!-- Shaft & Slide -->
-    <path d="M 684 260 L 684 220 L 678 215 L 678 135 L 678 60 L 664 55 L 664 15 L 716 15 L 716 55 L 702 60 L 702 135 L 702 215 L 696 220 L 696 260" />
-    <line x1="678" y1="135" x2="702" y2="135" stroke-width="8" />
-
-    <!-- 9. TENOR DRONE 1 (ANGLED ~18 DEG) -->
-    <g transform="rotate(18, 790, 290)">
-      <path d="M 760 290 C 760 272, 796 272, 796 290" />
-      <path d="M 772 272 L 772 238 L 766 233 L 766 170 L 766 100 L 754 95 L 754 62 L 798 62 L 798 95 L 786 100 L 786 170 L 786 233 L 780 238 L 780 272" />
-      <line x1="766" y1="170" x2="786" y2="170" stroke-width="8" />
+    <!-- 8. Tenor Drone 1 (Angled 18 deg clockwise, Center 794, 293) -->
+    <g transform="translate(794, 293) rotate(18)">
+      <!-- Stock collar on rim -->
+      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" stroke="none" />
+      <!-- Shaft, Slide Ferrule, Neck, Flared Bell & Top Cap -->
+      <path
+        d="
+          M -10 -24
+          L -10 -60
+          L -12 -60
+          L -12 -66
+          L -10 -66
+          L -10 -170
+          L -22 -175
+          L -22 -204
+          L 22 -204
+          L 22 -175
+          L 10 -170
+          L 10 -66
+          L 12 -66
+          L 12 -60
+          L 10 -60
+          L 10 -24
+          Z
+        "
+        stroke="none"
+      />
     </g>
 
-    <!-- 10. TENOR DRONE 2 (ANGLED ~36 DEG) -->
-    <g transform="rotate(36, 875, 325)">
-      <path d="M 845 325 C 845 308, 881 308, 881 325" />
-      <path d="M 857 308 L 857 274 L 851 269 L 851 210 L 851 150 L 839 145 L 839 115 L 883 115 L 883 145 L 871 150 L 871 210 L 871 269 L 865 274 L 865 308" />
-      <line x1="851" y1="210" x2="871" y2="210" stroke-width="8" />
+    <!-- 9. Tenor Drone 2 (Angled 36 deg clockwise, Center 874, 332) -->
+    <g transform="translate(874, 332) rotate(36)">
+      <!-- Stock collar on rim -->
+      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" stroke="none" />
+      <!-- Shaft, Slide Ferrule, Neck, Flared Bell & Top Cap -->
+      <path
+        d="
+          M -10 -24
+          L -10 -60
+          L -12 -60
+          L -12 -66
+          L -10 -66
+          L -10 -170
+          L -22 -175
+          L -22 -204
+          L 22 -204
+          L 22 -175
+          L 10 -170
+          L 10 -66
+          L 12 -66
+          L 12 -60
+          L 10 -60
+          L 10 -24
+          Z
+        "
+        stroke="none"
+      />
     </g>
   </g>
 </svg>
