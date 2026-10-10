@@ -53,10 +53,15 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToTeasers, onScrollToRoadmap
   };
 
   return (
-    <section className="relative min-h-[90vh] flex flex-col justify-center pt-28 pb-16 overflow-hidden technical-grid stave-lines">
+    <section className="relative min-h-[92vh] flex flex-col justify-center pt-28 pb-16 overflow-hidden technical-grid stave-lines">
       {/* Cinematic Lighting */}
       <div className="absolute top-0 inset-x-0 h-96 radial-glow-top pointer-events-none" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[720px] h-[520px] bg-[#4C9FFF]/10 blur-[130px] rounded-full pointer-events-none" />
+
+      {/* Large Ambient Watermark of Official Logo in Hero Background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[520px] opacity-[0.045] pointer-events-none select-none">
+        <BrandLogo size="hero" showWordmark={false} variant="white" className="w-full h-full" />
+      </div>
 
       {/* Decorative Musical Stave Vectors */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
@@ -81,8 +86,22 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToTeasers, onScrollToRoadmap
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10 flex-1 flex flex-col justify-center">
+        
+        {/* PROMINENT OFFICIAL LOGO SHOWCASE IN HERO */}
+        <div className="flex flex-col items-center justify-center mb-6">
+          <div className="relative group cursor-default">
+            {/* Ambient halo glow behind logo */}
+            <div className="absolute inset-0 bg-[#8ABFFF]/25 blur-2xl rounded-full scale-125 pointer-events-none" />
+            
+            {/* Illuminated Emblem Frame */}
+            <div className="relative bg-[#11213A]/90 border border-[#8ABFFF]/35 rounded-3xl p-5 sm:p-6 shadow-2xl shadow-[#8ABFFF]/20 backdrop-blur-md transition-transform duration-300 hover:scale-105">
+              <BrandLogo size="xl" showWordmark={false} variant="glow" />
+            </div>
+          </div>
+        </div>
+
         {/* Eyebrow */}
-        <div className="inline-flex items-center gap-2 mb-6">
+        <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-1.5 h-1.5 rounded-full bg-[#8ABFFF] animate-ping" />
           <span className="text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#8ABFFF] font-mono">
             1998 – 2026 OFFICIAL ARCHIVES · 28 SEASONS

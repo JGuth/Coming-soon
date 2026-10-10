@@ -25,7 +25,7 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/[0.06]">
           {/* Brand Col */}
           <div className="md:col-span-6 space-y-4">
-            <BrandLogo size="md" />
+            <BrandLogo size="lg" variant="glow" />
             <p className="text-sm text-[#F5F8FC] font-medium tracking-tight pt-1">
               "Every contest. Every result. Every story."
             </p>

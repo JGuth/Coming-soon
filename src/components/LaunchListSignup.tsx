@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle2, AlertCircle, Loader2, Lock, Shield } from 'lucide-react';
+import { BrandLogo } from './BrandLogo.tsx';
 import { PrivacyPolicyModal } from './PrivacyPolicyModal.tsx';
 
 interface LaunchListSignupProps {
@@ -91,6 +92,13 @@ export const LaunchListSignup: React.FC<LaunchListSignupProps> = ({ inputRef }) 
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#8ABFFF] to-transparent" />
 
           <div className="max-w-2xl mx-auto text-center">
+            {/* Prominent Logo Badge */}
+            <div className="flex justify-center mb-5">
+              <div className="p-3 bg-[#0B1425] rounded-2xl border border-[#8ABFFF]/30 shadow-lg shadow-[#8ABFFF]/15">
+                <BrandLogo size="lg" showWordmark={false} variant="glow" />
+              </div>
+            </div>
+
             {/* Header */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#11213A] border border-[#8ABFFF]/25 text-[#8ABFFF] text-xs font-mono font-medium mb-6">
               <Lock className="w-3.5 h-3.5" />

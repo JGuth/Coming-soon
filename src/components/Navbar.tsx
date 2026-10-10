@@ -46,10 +46,10 @@ export const Navbar: React.FC = () => {
                 e.preventDefault();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8ABFFF] rounded-lg"
+              className="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8ABFFF] rounded-lg group"
               aria-label="PipeBand.app Home"
             >
-              <BrandLogo size="md" />
+              <BrandLogo size="md" variant="glow" />
             </a>
             <span className="hidden sm:inline-block px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-[#11213A] text-[#8ABFFF] border border-[#8ABFFF]/20">
               1998–2026 Archive

@@ -1,11 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="7" fill="#0B1425" />
-  <rect x="14.5" y="4" width="3" height="24" rx="1" fill="#8ABFFF" />
-  <circle cx="16" cy="4" r="1.8" fill="#8ABFFF" />
-  <rect x="8" y="9" width="2.5" height="19" rx="0.9" fill="#4C9FFF" />
-  <circle cx="9.25" cy="8.5" r="1.4" fill="#8ABFFF" />
-  <rect x="21.5" y="9" width="2.5" height="19" rx="0.9" fill="#4C9FFF" />
-  <circle cx="22.75" cy="8.5" r="1.4" fill="#8ABFFF" />
-  <path d="M 5 21 C 8 15, 12 13, 16 13 C 20 13, 24 15, 27 21" stroke="#8ABFFF" stroke-width="1.5" stroke-linecap="round" />
-  <path d="M 7 26 C 9.5 22, 12.5 20, 16 20 C 19.5 20, 22.5 22, 25 26" stroke="#4C9FFF" stroke-width="1.2" stroke-linecap="round" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 660" fill="none">
+  <rect width="600" height="660" rx="120" fill="#0B1425" />
+  <g stroke="#8ABFFF" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- LOWERCASE 'p' -->
+    <path d="M 110 320 L 110 550 C 110 590 145 610 175 580 C 195 560 195 510 195 460" />
+    <path d="M 110 320 C 110 220 190 190 270 190 C 355 190 425 240 425 340 C 425 430 365 485 285 485 C 235 485 195 465 195 425" />
+    <path d="M 195 460 C 195 500 240 520 295 515 C 365 505 425 455 460 410" />
+
+    <!-- 'b' STEM & BACK -->
+    <path d="M 270 190 C 270 110 290 30 330 30 L 340 30 C 375 30 380 100 380 190" />
+
+    <!-- 'b' BOWL -->
+    <path d="M 455 195 C 530 225 565 295 565 380 C 565 485 490 565 375 565 C 300 565 250 515 230 475" />
+    <path d="M 380 250 C 450 250 505 305 505 380 C 505 455 450 505 380 505 C 340 505 300 475 285 435" />
+
+    <!-- DRONES -->
+    <!-- Bass drone -->
+    <path d="M 422 165 L 422 75" />
+    <path d="M 412 120 C 412 95 418 85 418 75 L 426 75 C 426 85 432 95 432 120 Z" />
+    <path d="M 414 55 C 404 55 404 30 412 20 L 432 20 C 440 30 440 55 430 55 Z" />
+
+    <!-- Tenor drone 1 -->
+    <g transform="rotate(18, 472, 185)">
+      <path d="M 472 180 L 472 95" />
+      <path d="M 464 135 C 464 115 468 105 468 95 L 476 95 C 476 105 480 115 480 135 Z" />
+      <path d="M 465 80 C 458 80 458 60 464 52 L 480 52 C 486 60 486 80 479 80 Z" />
+    </g>
+
+    <!-- Tenor drone 2 -->
+    <g transform="rotate(36, 517, 220)">
+      <path d="M 517 215 L 517 135" />
+      <path d="M 510 170 C 510 155 514 145 514 135 L 520 135 C 520 145 524 155 524 170 Z" />
+      <path d="M 511 120 C 505 120 505 102 511 96 L 523 96 C 529 102 529 120 523 120 Z" />
+    </g>
+  </g>
 </svg>
