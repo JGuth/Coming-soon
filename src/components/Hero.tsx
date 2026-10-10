@@ -110,7 +110,7 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToTeasers, onScrollToRoadmap
 
         {/* Main Heading */}
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-[#F5F8FC] leading-[1.08] mb-6 font-sans">
-          Every contest.<br className="hidden sm:inline" />{' '}
+          Every contest..<br className="hidden sm:inline" />{' '}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F5F8FC] via-[#D2E4FF] to-[#8ABFFF]">
             Every result.
           </span><br className="hidden sm:inline" />{' '}
