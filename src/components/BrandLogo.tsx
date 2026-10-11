@@ -1,10 +1,12 @@
 import React from 'react';
+import defaultLogoImage from '../assets/images/regenerated_image_1791656993424.png';
 
 interface BrandLogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'hero';
   showWordmark?: boolean;
   variant?: 'default' | 'glow' | 'white';
+  imageSrc?: string;
 }
 
 export const BrandLogo: React.FC<BrandLogoProps> = ({
@@ -12,6 +14,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
   size = 'md',
   showWordmark = true,
   variant = 'default',
+  imageSrc = defaultLogoImage,
 }) => {
   // Dimensional size mapping
   const sizeMap = {
@@ -34,7 +37,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
         style={{ width: currentSize.width, height: currentSize.height }}
       >
         <img
-          src="/assets/logo.svg?v=4"
+          src={imageSrc}
           alt="PipeBand.app Logo"
           className="w-full h-full object-contain select-none"
         />
@@ -42,8 +45,17 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
 
       {/* Brand Wordmark */}
       {showWordmark && (
-        <span className={`font-extrabold tracking-tight text-[#F5F8FC] ${currentSize.text} flex items-center`}>
-          PipeBand<span className="text-[#8ABFFF] font-medium">.app</span>
+        <span
+          className={`font-extrabold tracking-tight ${currentSize.text} flex items-center`}
+          style={{ color: 'var(--theme-text-primary, #F5F8FC)' }}
+        >
+          PipeBand
+          <span
+            className="font-medium"
+            style={{ color: 'var(--theme-primary, #8ABFFF)' }}
+          >
+            .app
+          </span>
         </span>
       )}
     </div>

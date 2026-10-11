@@ -1,11 +1,17 @@
 import React, { useRef } from 'react';
+import { SettingsProvider, useSettings } from './context/SettingsContext.tsx';
+import { AnnouncementBar } from './components/AnnouncementBar.tsx';
 import { Navbar } from './components/Navbar.tsx';
 import { Hero } from './components/Hero.tsx';
 import { FeatureTeaser } from './components/FeatureTeaser.tsx';
 import { RoadmapSection } from './components/RoadmapSection.tsx';
 import { Footer } from './components/Footer.tsx';
+import { AdminPanel } from './components/AdminPanel.tsx';
+import { AdminLoginModal } from './components/AdminLoginModal.tsx';
+import { AdminTrigger } from './components/AdminTrigger.tsx';
 
-export default function App() {
+function MainApp() {
+  const { settings } = useSettings();
   const emailInputRef = useRef<HTMLInputElement>(null);
 
   const scrollToSection = (id: string) => {
@@ -28,11 +34,20 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B1425] text-[#F5F8FC] selection:bg-[#4C9FFF]/30 selection:text-white flex flex-col font-sans">
+    <div
+      className="min-h-screen flex flex-col font-sans transition-colors duration-300"
+      style={{
+        backgroundColor: settings.colors.bgDark,
+        color: settings.colors.textPrimary,
+      }}
+    >
+      {/* Optional Top Announcement Bar */}
+      <AnnouncementBar />
+
       {/* Navigation */}
       <Navbar />
 
-      {/* Main Content - Tight, High-Impact 3 Sections */}
+      {/* Main Content */}
       <main className="flex-1">
         {/* Section 1: Hero & Vision + Instant Launch List Capture */}
         <Hero
@@ -54,6 +69,22 @@ export default function App() {
         onScrollToDiscover={() => scrollToSection('features')}
         onScrollToHowItWorks={() => scrollToSection('roadmap')}
       />
+
+      {/* Floating Admin Quick Access Trigger */}
+      <AdminTrigger />
+
+      {/* Admin Login Modal & Admin Panel Drawer */}
+      <AdminLoginModal />
+      <AdminPanel />
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <SettingsProvider>
+      <MainApp />
+    </SettingsProvider>
+  );
+}
+

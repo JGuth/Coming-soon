@@ -1,52 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1100" fill="none" aria-label="PipeBand.app Favicon">
-  <!-- Official PipeBand.app "pb" Bagpipe Drones Monogram Favicon -->
-  <g fill="#FFFFFF" stroke="#FFFFFF">
-    <!-- 1. 'b' Loop: Annular ring (Outer R 280, Inner R 160 at center 710, 560) -->
+  <!-- Official PipeBand.app "pb" Monogram Silhouette Favicon -->
+  <defs>
+    <!-- Knockout mask to carve the negative-space channel around foreground 'p' -->
+    <mask id="pba-b-knockout-fav">
+      <rect x="-100" y="-100" width="1200" height="1300" fill="#FFFFFF" />
+      <path
+        d="M 80 925 L 80 520 A 195 195 0 1 1 275 715 C 340 715, 410 705, 465 675"
+        stroke="#000000"
+        stroke-width="156"
+        stroke-linecap="round"
+        fill="none"
+      />
+    </mask>
+  </defs>
+
+  <!-- LAYER 1: 'b' Letterform (Masked by knockout channel) -->
+  <g mask="url(#pba-b-knockout-fav)" fill="#FFFFFF" stroke="#FFFFFF">
     <circle cx="710" cy="560" r="220" stroke-width="120" fill="none" />
-
-    <!-- 2. 'b' Vertical Ascender (Stem) -->
     <path
-      d="M 445 295 L 445 170 C 445 105, 490 60, 550 60 L 550 330 C 515 330, 480 310, 445 295 Z"
+      d="M 430 360 L 430 160 C 430 90, 485 55, 550 55 L 550 360 Z"
       fill="#FFFFFF"
       stroke="none"
     />
+  </g>
 
-    <!-- 3. 'p' Descender & Left Stem with Semicircular Bottom Terminal -->
-    <path
-      d="M 80 430 L 80 925"
-      stroke-width="112"
-      stroke-linecap="round"
-      fill="none"
-    />
-
-    <!-- 4. 'p' Upper Bowl Arch (Over the circular counter at 275, 520) -->
-    <path
-      d="M 80 430 C 80 255, 190 255, 275 255 C 355 255, 420 270, 445 295"
-      stroke-width="112"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      fill="none"
-    />
-
-    <!-- 5. 'p' Lower Bowl & Sweeping Tail with Rounded Terminal Cap -->
-    <path
-      d="M 135 600 C 135 730, 220 765, 300 765 C 370 765, 430 735, 465 675"
-      stroke-width="112"
-      stroke-linecap="round"
-      fill="none"
-    />
-
-    <!-- 6. Solid Junction Divider between 'p' and 'b' counters -->
-    <path
-      d="M 415 340 L 550 330 L 550 560 L 415 520 Z"
-      fill="#FFFFFF"
-      stroke="none"
-    />
-
-    <!-- 7. Bass Drone (Vertical, Center X 688) -->
-    <!-- Stock collar on 'b' rim -->
-    <path d="M 668 281 C 668 265, 708 265, 708 281 Z" stroke="none" />
-    <!-- Shaft, Tuning Slide Ferrule, Neck, Flared Bell & Top Cap -->
+  <!-- LAYER 2: Three Highland Bagpipe Drones -->
+  <g fill="#FFFFFF" stroke="none">
+    <path d="M 668 281 C 668 265, 708 265, 708 281 Z" />
     <path
       d="
         M 684 257
@@ -67,14 +47,10 @@
         L 692 257
         Z
       "
-      stroke="none"
     />
 
-    <!-- 8. Tenor Drone 1 (Angled 18 deg clockwise, Center 794, 293) -->
     <g transform="translate(794, 293) rotate(18)">
-      <!-- Stock collar on rim -->
-      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" stroke="none" />
-      <!-- Shaft, Slide Ferrule, Neck, Flared Bell & Top Cap -->
+      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" />
       <path
         d="
           M -10 -24
@@ -95,15 +71,11 @@
           L 10 -24
           Z
         "
-        stroke="none"
       />
     </g>
 
-    <!-- 9. Tenor Drone 2 (Angled 36 deg clockwise, Center 874, 332) -->
     <g transform="translate(874, 332) rotate(36)">
-      <!-- Stock collar on rim -->
-      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" stroke="none" />
-      <!-- Shaft, Slide Ferrule, Neck, Flared Bell & Top Cap -->
+      <path d="M -20 0 C -20 -16, 20 -16, 20 0 Z" />
       <path
         d="
           M -10 -24
@@ -124,8 +96,16 @@
           L 10 -24
           Z
         "
-        stroke="none"
       />
     </g>
   </g>
+
+  <!-- LAYER 3: 'p' Foreground Monogram Letter -->
+  <path
+    d="M 80 925 L 80 520 A 195 195 0 1 1 275 715 C 340 715, 410 705, 465 675"
+    stroke="#FFFFFF"
+    stroke-width="112"
+    stroke-linecap="round"
+    fill="none"
+  />
 </svg>

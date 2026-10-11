@@ -77,6 +77,7 @@ setInterval(() => {
 // Health check endpoint (used by Docker, load balancers, monitoring)
 app.get('/api/health', (_req: Request, res: Response) => {
   const dbHealthy = dbManager.checkHealth();
+  const signupCount = dbManager.getCount();
   const status = dbHealthy ? 'ok' : 'degraded';
   res.status(dbHealthy ? 200 : 500).json({
     status,
@@ -84,7 +85,249 @@ app.get('/api/health', (_req: Request, res: Response) => {
     service: 'PipeBand.app API',
     database: dbHealthy ? 'connected' : 'error',
     uptime: process.uptime(),
+    signupsCount: signupCount,
+    nodeVersion: process.version,
+    memoryUsage: process.memoryUsage().rss,
   });
+});
+
+// Settings Endpoints
+// Admin Authentication Middleware
+function checkAdminAuth(req: Request, res: Response, next: () => void) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !dbManager.verifyAdminToken(authHeader)) {
+    res.status(401).json({
+      success: false,
+      error: 'Unauthorized: Admin login required to perform this action.',
+    });
+    return;
+  }
+  next();
+}
+
+// Admin Auth Endpoints
+app.post('/api/admin/login', (req: Request, res: Response) => {
+  try {
+    const { password, username } = req.body;
+    if (!password || typeof password !== 'string') {
+      res.status(400).json({ success: false, error: 'Password is required.' });
+      return;
+    }
+
+    const result = dbManager.loginAdmin(password, username || 'admin');
+    if (!result.success) {
+      res.status(401).json({ success: false, error: result.error || 'Invalid credentials.' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      token: result.token,
+      username: username || 'admin',
+      message: 'Admin authentication successful.',
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ success: false, error: 'Authentication service failure.' });
+  }
+});
+
+app.get('/api/admin/verify', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  const isValid = dbManager.verifyAdminToken(authHeader);
+  res.json({
+    success: true,
+    authenticated: isValid,
+  });
+});
+
+app.post('/api/admin/change-password', checkAdminAuth, (req: Request, res: Response) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      res.status(400).json({ success: false, error: 'Both current and new password are required.' });
+      return;
+    }
+
+    const result = dbManager.changeAdminPassword(currentPassword, newPassword);
+    if (!result.success) {
+      res.status(400).json({ success: false, error: result.error || 'Failed to change password.' });
+      return;
+    }
+
+    res.json({ success: true, message: 'Admin password updated successfully.' });
+  } catch (err) {
+    console.error('Password change error:', err);
+    res.status(500).json({ success: false, error: 'Failed to update password.' });
+  }
+});
+
+app.post('/api/admin/logout', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  dbManager.logoutAdmin(authHeader);
+  res.json({ success: true, message: 'Logged out successfully.' });
+});
+
+// Settings Endpoints
+app.get('/api/settings', (_req: Request, res: Response) => {
+  try {
+    const raw = dbManager.getSettings();
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      res.json({ success: true, settings: parsed, isCustom: true });
+      return;
+    }
+    // Return empty custom so client uses default or returns defaults
+    res.json({ success: true, settings: null, isCustom: false });
+  } catch (err: unknown) {
+    console.error('Error fetching settings:', err);
+    res.status(500).json({ success: false, error: 'Failed to retrieve website settings.' });
+  }
+});
+
+app.put('/api/settings', checkAdminAuth, (req: Request, res: Response) => {
+  try {
+    const { settings } = req.body;
+    if (!settings || typeof settings !== 'object') {
+      res.status(400).json({ success: false, error: 'Invalid settings payload.' });
+      return;
+    }
+
+    const payload = JSON.stringify({
+      ...settings,
+      updatedAt: new Date().toISOString(),
+    });
+
+    const saved = dbManager.saveSettings(payload);
+    if (!saved) {
+      res.status(500).json({ success: false, error: 'Failed to persist settings into database.' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: 'Website settings and colors saved successfully.',
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err: unknown) {
+    console.error('Error updating settings:', err);
+    res.status(500).json({ success: false, error: 'An error occurred while saving website settings.' });
+  }
+});
+
+app.post('/api/settings/reset', checkAdminAuth, (_req: Request, res: Response) => {
+  try {
+    dbManager.resetSettings();
+    res.json({
+      success: true,
+      message: 'Website settings restored to factory defaults.',
+    });
+  } catch (err: unknown) {
+    console.error('Error resetting settings:', err);
+    res.status(500).json({ success: false, error: 'Failed to reset settings.' });
+  }
+});
+
+// Admin Signups Endpoints
+app.get('/api/admin/signups', checkAdminAuth, (req: Request, res: Response) => {
+  try {
+    const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+    const limit = typeof req.query.limit === 'string' ? Math.min(Number(req.query.limit) || 100, 500) : 100;
+    const signups = dbManager.getAllSignups(limit, search);
+    const totalCount = dbManager.getCount();
+
+    res.json({
+      success: true,
+      totalCount,
+      signups,
+    });
+  } catch (err: unknown) {
+    console.error('Error fetching admin signups:', err);
+    res.status(500).json({ success: false, error: 'Failed to fetch signups.' });
+  }
+});
+
+app.post('/api/admin/signups/manual', checkAdminAuth, (req: Request, res: Response) => {
+  try {
+    const { email, interest } = req.body;
+    if (!email || typeof email !== 'string' || !email.includes('@')) {
+      res.status(400).json({ success: false, error: 'Valid email is required.' });
+      return;
+    }
+
+    const result = dbManager.insertSignup(email, true, interest || 'admin_manual');
+    res.json({
+      success: true,
+      isNew: result.isNew,
+      message: result.message,
+      totalCount: dbManager.getCount(),
+    });
+  } catch (err) {
+    console.error('Manual signup error:', err);
+    res.status(500).json({ success: false, error: 'Failed to add signup.' });
+  }
+});
+
+app.delete('/api/admin/signups/:id', checkAdminAuth, (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id) || id <= 0) {
+      res.status(400).json({ success: false, error: 'Invalid signup ID.' });
+      return;
+    }
+
+    const deleted = dbManager.deleteSignup(id);
+    if (!deleted) {
+      res.status(500).json({ success: false, error: 'Failed to remove signup entry.' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      message: `Signup #${id} removed successfully.`,
+      remainingCount: dbManager.getCount(),
+    });
+  } catch (err: unknown) {
+    console.error('Error deleting signup:', err);
+    res.status(500).json({ success: false, error: 'Failed to delete signup.' });
+  }
+});
+
+app.delete('/api/admin/signups/clear-all', checkAdminAuth, (_req: Request, res: Response) => {
+  try {
+    dbManager.clearSignups();
+    res.json({
+      success: true,
+      message: 'All signups have been cleared.',
+      remainingCount: 0,
+    });
+  } catch (err) {
+    console.error('Clear signups error:', err);
+    res.status(500).json({ success: false, error: 'Failed to clear signups.' });
+  }
+});
+
+app.get('/api/admin/signups/export', (_req: Request, res: Response) => {
+  try {
+    const signups = dbManager.getAllSignups(10000);
+    const headers = ['ID', 'Email', 'Interest', 'Consent', 'Source', 'Registered At'];
+    const rows = signups.map((s) => [
+      s.id,
+      `"${s.email.replace(/"/g, '""')}"`,
+      `"${(s.interest || '').replace(/"/g, '""')}"`,
+      s.consent ? 'YES' : 'NO',
+      `"${(s.source || '').replace(/"/g, '""')}"`,
+      s.created_at,
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="pipeband_signups.csv"');
+    res.send(csvContent);
+  } catch (err: unknown) {
+    console.error('Error exporting signups:', err);
+    res.status(500).json({ success: false, error: 'Failed to export signups.' });
+  }
 });
 
 // Launch-list signup endpoint
