@@ -2126,6 +2126,61 @@ export const AdminPanel: React.FC = () => {
                   </span>
                 </div>
 
+                {/* Website Visibility Mode Card */}
+                <div className="p-4 bg-[#0B1425] rounded-xl border border-white/10 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                        <span>Public Website Visibility Mode</span>
+                      </h4>
+                      <p className="text-[11px] text-[#A7B4C7] mt-0.5">
+                        Control what public visitors see when visiting the URL
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#11213A] border border-white/10 text-[#8ABFFF]">
+                      {(settings.siteMode || 'splash') === 'splash' ? 'SPLASH (1 PAGE)' : 'LIVE (FULL SITE)'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => updateSettingSection('siteMode' as keyof typeof settings, 'splash' as any)}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                        (settings.siteMode || 'splash') === 'splash'
+                          ? 'bg-[#8ABFFF]/15 border-[#8ABFFF] text-white shadow-md'
+                          : 'bg-[#111B2B] border-white/10 text-[#A7B4C7] hover:text-white'
+                      }`}
+                    >
+                      <div className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-amber-400" />
+                        <span>1. Under Construction (Single Page)</span>
+                      </div>
+                      <div className="text-[10px] text-[#A7B4C7] mt-1 leading-relaxed">
+                        Zero scrolling. Displays logo, name, headline, launch list capture & archive metrics (like screenshot).
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => updateSettingSection('siteMode' as keyof typeof settings, 'live' as any)}
+                      className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                        settings.siteMode === 'live'
+                          ? 'bg-[#8ABFFF]/15 border-[#8ABFFF] text-white shadow-md'
+                          : 'bg-[#111B2B] border-white/10 text-[#A7B4C7] hover:text-white'
+                      }`}
+                    >
+                      <div className="text-xs font-bold font-mono text-white flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <span>2. Full Live Multi-Section Site</span>
+                      </div>
+                      <div className="text-[10px] text-[#A7B4C7] mt-1 leading-relaxed">
+                        Public visitors can scroll and explore Feature Teasers, Grade charts, Adjudicator analytics, and Roadmap.
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Glow intensity */}
                   <div className="p-3 bg-[#0B1425] rounded-xl border border-white/10 space-y-2">

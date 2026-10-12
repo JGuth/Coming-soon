@@ -5,7 +5,7 @@ import navbarLogoImage from '../assets/images/regenerated_image_1791656993424.pn
 import { useSettings } from '../context/SettingsContext.tsx';
 
 export const Navbar: React.FC = () => {
-  const { settings, openAdmin, hasUnsavedChanges, isAdminLoggedIn } = useSettings();
+  const { settings, openAdmin, hasUnsavedChanges, isAdminLoggedIn, triggerLogoEntrance } = useSettings();
   const { navigation, colors } = settings;
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,11 +52,16 @@ export const Navbar: React.FC = () => {
               href="#"
               onClick={(e) => {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (window.scrollY < 40) {
+                  triggerLogoEntrance();
+                } else {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
               }}
-              className="flex items-center focus-visible:outline-none focus-visible:ring-2 rounded-lg group"
+              className="flex items-center focus-visible:outline-none focus-visible:ring-2 rounded-lg group cursor-pointer"
               style={{ outlineColor: colors.primaryAccent }}
               aria-label="PipeBand.app Home"
+              title="Click to replay logo entrance"
             >
               <BrandLogo size="md" variant="glow" imageSrc={navbarLogoImage} />
             </a>

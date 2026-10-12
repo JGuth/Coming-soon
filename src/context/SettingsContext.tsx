@@ -18,6 +18,8 @@ interface SettingsContextType {
   adminToken: string | null;
   isLoginModalOpen: boolean;
   setIsLoginModalOpen: (open: boolean) => void;
+  previewFullSite: boolean;
+  setPreviewFullSite: (preview: boolean) => void;
   openAdmin: () => void;
   loginAdmin: (password: string, username?: string) => Promise<{ success: boolean; error?: string }>;
   logoutAdmin: () => Promise<void>;
@@ -63,6 +65,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSaving, setIsSaving] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [previewFullSite, setPreviewFullSite] = useState(false);
 
   // Admin Auth State
   const [adminToken, setAdminToken] = useState<string | null>(() => {
@@ -411,6 +414,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         adminToken,
         isLoginModalOpen,
         setIsLoginModalOpen,
+        previewFullSite,
+        setPreviewFullSite,
         openAdmin,
         loginAdmin,
         logoutAdmin,

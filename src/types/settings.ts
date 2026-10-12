@@ -194,6 +194,7 @@ export interface SiteChartsConfig {
 export interface WebsiteSettings {
   colors: SiteColors;
   themePreset: string;
+  siteMode?: 'splash' | 'live';
   visuals?: SiteVisualOptions;
   seo?: SiteSEO;
   announcement: SiteAnnouncement;
@@ -218,6 +219,7 @@ export const DEFAULT_WEBSITE_SETTINGS: WebsiteSettings = {
     textMuted: '#A7B4C7',
   },
   themePreset: 'classic-blue',
+  siteMode: 'splash',
   visuals: {
     glowIntensity: 'subtle',
     gridStyle: 'subtle',
