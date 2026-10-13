@@ -33,6 +33,9 @@ interface SettingsContextType {
   saveChanges: () => Promise<{ success: boolean; message?: string; error?: string }>;
   discardChanges: () => void;
   resetToDefaults: () => Promise<{ success: boolean; message?: string; error?: string }>;
+  isLogoEntrancePlaying: boolean;
+  finishLogoEntrance: () => void;
+  triggerLogoEntrance: () => void;
 }
 
 const SettingsContext = createContext<SettingsContextType | null>(null);
@@ -78,6 +81,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
     return Boolean(localStorage.getItem('pipeband_admin_token'));
   });
+
+  // Logo entrance animation state
+  const [isLogoEntrancePlaying, setIsLogoEntrancePlaying] = useState<boolean>(false);
+  const finishLogoEntrance = useCallback(() => setIsLogoEntrancePlaying(false), []);
+  const triggerLogoEntrance = useCallback(() => setIsLogoEntrancePlaying(true), []);
 
   // Verify stored token with backend
   useEffect(() => {
@@ -426,6 +434,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         saveChanges,
         discardChanges,
         resetToDefaults,
+        isLogoEntrancePlaying,
+        finishLogoEntrance,
+        triggerLogoEntrance,
       }}
     >
       {children}

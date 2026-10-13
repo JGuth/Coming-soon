@@ -86,6 +86,21 @@ export interface AscentMilestone {
   notes?: string;
 }
 
+export interface ChartAnimationConfig {
+  enabled: boolean;
+  autoPlay: boolean;
+  speed: 'slow' | 'normal' | 'fast';
+  pauseDurationMs: number;
+  tracerStyle: 'golden-comet' | 'cyan-spark' | 'laser-ring' | 'emerald-beam' | 'royal-flame';
+  spotlightEffect: boolean;
+  showCrownCelebration: boolean;
+  loopAnimation: boolean;
+  showFloatingMilestoneCard?: boolean;
+  soundEffectsEnabled?: boolean;
+  nodeMarkerStyle?: 'rings' | 'shields' | 'diamonds' | 'solid';
+  showMetricCards?: boolean;
+}
+
 export interface AscentChartConfig {
   bandName: string;
   journeySubtitle: string;
@@ -109,12 +124,17 @@ export interface AscentChartConfig {
   landmark6Label: string;
   accentThemeMatch?: boolean;
   defaultMobileView?: 'stepper' | 'curve';
-  curveStrokeWidth?: 'fine' | 'medium' | 'bold';
+  curveStrokeWidth?: 'fine' | 'medium' | 'bold' | 'ultra';
   showGridlines?: boolean;
   showNodeGlow?: boolean;
   milestoneDisplayFormat?: 'cards' | 'timeline';
   rivalOverlayBandName?: string;
   rivalOverlayGrade?: string;
+  rivalOverlayColor?: string;
+  curveStyle?: 'spline' | 'stepped' | 'linear';
+  yAxisGradeScale?: 'full-rspba' | 'simplified';
+  showWorldTitlesRibbon?: boolean;
+  animation?: ChartAnimationConfig;
   milestones?: AscentMilestone[];
 }
 
@@ -126,6 +146,7 @@ export interface SiteVisualOptions {
   tartanOverlay?: 'visible' | 'subtle' | 'none';
   buttonStyle?: 'pill' | 'rounded' | 'sharp';
   containerMaxWidth?: 'compact' | 'standard' | 'wide';
+  logoEntranceEnabled?: boolean;
 }
 
 export interface SiteSEO {
@@ -307,6 +328,24 @@ export const DEFAULT_WEBSITE_SETTINGS: WebsiteSettings = {
       milestoneDisplayFormat: 'cards',
       rivalOverlayBandName: 'Field Marshal Montgomery',
       rivalOverlayGrade: 'Grade 1',
+      rivalOverlayColor: '#94A3B8',
+      curveStyle: 'spline',
+      yAxisGradeScale: 'full-rspba',
+      showWorldTitlesRibbon: true,
+      animation: {
+        enabled: true,
+        autoPlay: false,
+        speed: 'normal',
+        pauseDurationMs: 2400,
+        tracerStyle: 'golden-comet',
+        spotlightEffect: true,
+        showCrownCelebration: true,
+        loopAnimation: true,
+        showFloatingMilestoneCard: true,
+        soundEffectsEnabled: false,
+        nodeMarkerStyle: 'rings',
+        showMetricCards: true,
+      },
       milestones: [
         {
           id: 'm1',

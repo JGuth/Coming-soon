@@ -32,6 +32,9 @@ import {
   Layers,
   Crown,
   Rocket,
+  Play,
+  Volume2,
+  FastForward,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext.tsx';
 import {
@@ -40,8 +43,10 @@ import {
   DEFAULT_WEBSITE_SETTINGS,
   SiteChartsConfig,
   AscentMilestone,
+  ChartAnimationConfig,
   SiteVisualOptions,
 } from '../types/settings.ts';
+import { GradeProgressionChart } from './GradeProgressionChart.tsx';
 import { SignupRecord } from '../../server/db.ts';
 
 type ActiveTab = 'colors' | 'charts' | 'texts' | 'styling' | 'security' | 'signups' | 'testing' | 'data';
@@ -111,6 +116,39 @@ export const AdminPanel: React.FC = () => {
         ...charts[mod],
         ...patch,
       },
+    });
+  };
+
+  const updateChartAnimation = (patch: Partial<ChartAnimationConfig>) => {
+    const defaultAnim: ChartAnimationConfig = {
+      enabled: true,
+      autoPlay: false,
+      speed: 'normal',
+      pauseDurationMs: 2400,
+      tracerStyle: 'golden-comet',
+      spotlightEffect: true,
+      showCrownCelebration: true,
+      loopAnimation: true,
+      showFloatingMilestoneCard: true,
+      soundEffectsEnabled: false,
+      nodeMarkerStyle: 'rings',
+      showMetricCards: true,
+    };
+    const baseAnim = charts.ascent.animation || defaultAnim;
+    const mergedAnim: ChartAnimationConfig = {
+      ...baseAnim,
+      ...patch,
+      enabled: patch.enabled !== undefined ? patch.enabled : baseAnim.enabled,
+      autoPlay: patch.autoPlay !== undefined ? patch.autoPlay : baseAnim.autoPlay,
+      speed: patch.speed || baseAnim.speed,
+      pauseDurationMs: patch.pauseDurationMs || baseAnim.pauseDurationMs,
+      tracerStyle: patch.tracerStyle || baseAnim.tracerStyle,
+      spotlightEffect: patch.spotlightEffect !== undefined ? patch.spotlightEffect : baseAnim.spotlightEffect,
+      showCrownCelebration: patch.showCrownCelebration !== undefined ? patch.showCrownCelebration : baseAnim.showCrownCelebration,
+      loopAnimation: patch.loopAnimation !== undefined ? patch.loopAnimation : baseAnim.loopAnimation,
+    };
+    updateChartModule('ascent', {
+      animation: mergedAnim,
     });
   };
 
@@ -377,7 +415,7 @@ export const AdminPanel: React.FC = () => {
     }
   };
 
-  const handleApplyMilestonePreset = (presetKey: 'inveraray' | 'boghall' | 'fmm') => {
+  const handleApplyMilestonePreset = (presetKey: 'inveraray' | 'boghall' | 'fmm' | 'shotts') => {
     if (presetKey === 'inveraray') {
       updateChartModule('ascent', {
         bandName: 'INVERARAY & DISTRICT',
@@ -430,6 +468,26 @@ export const AdminPanel: React.FC = () => {
         milestones: fmmMilestones,
       });
       showToast('success', 'Loaded Field Marshal Montgomery 13-title championship archive!');
+    } else if (presetKey === 'shotts') {
+      const shottsMilestones: AscentMilestone[] = [
+        { id: 's1', year: '1910', grade: 'Grade 3', eventTitle: 'Formation in North Lanarkshire', isPromotion: false, isWorldChampion: false, notes: 'Founded in Shotts, Scotland under P/M Dugald MacFarlane.' },
+        { id: 's2', year: '1948', grade: 'Grade 1', eventTitle: '1st Grade 1 World Championship', isPromotion: true, isWorldChampion: true, notes: 'Historic first World Championship victory.' },
+        { id: 's3', year: '1959', grade: 'Grade 1', eventTitle: 'Record 5 Consecutive World Titles', isPromotion: false, isWorldChampion: true, notes: 'Dominant 1950s golden era under P/M J.K. McAllister.' },
+        { id: 's4', year: '1980', grade: 'Grade 1', eventTitle: 'World Drumming Supremacy', isPromotion: false, isWorldChampion: true, notes: 'Alex Duthart leading drumming revolution.' },
+        { id: 's5', year: '2015', grade: 'Grade 1', eventTitle: '16th World Championship Crown', isPromotion: false, isWorldChampion: true, notes: 'Historic return to the summit under P/M Ryan Canning & L/D Jim Kilpatrick.' },
+        { id: 's6', year: '2026', grade: 'Grade 1', eventTitle: 'Centennial Heritage Flight', isPromotion: false, isWorldChampion: false, notes: '16-time World Champions and pipe band royalty.' },
+      ];
+      updateChartModule('ascent', {
+        bandName: 'SHOTTS & DYKEHEAD CALEDONIA',
+        journeySubtitle: '16-time Grade 1 World Champions and legendary Scottish institution',
+        startingGrade: 'Grade 3',
+        startingYear: '1910',
+        peakGrade: 'Grade 1',
+        promotionsCount: '2',
+        yearsToGrade1: '38 Yrs',
+        milestones: shottsMilestones,
+      });
+      showToast('success', 'Loaded Shotts & Dykehead Caledonia 16-title archive!');
     }
   };
 
@@ -1018,65 +1076,366 @@ export const AdminPanel: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Theme match & Mobile layout preferences */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#0B1425] rounded-xl border border-white/10">
-                    <div>
-                      <label className="block text-[11px] font-mono text-white font-semibold mb-1">
-                        Theme Colors Synchronization
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer mt-1">
+                  {/* =====================================================================
+                      1. ANIMATION ENGINE & MILESTONE STOP TOUR CONTROLS
+                     ===================================================================== */}
+                  <div className="p-3.5 bg-[#0B1425] rounded-xl border border-white/10 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+                        <Play className="w-3.5 h-3.5 text-amber-400 fill-current" />
+                        <span>Milestone Tour & Animation Engine</span>
+                      </h4>
+                      <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30">
+                        ANIMATED STOPS
+                      </span>
+                    </div>
+
+                    {/* Master Animation and AutoPlay */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/10 cursor-pointer text-xs text-[#A7B4C7] hover:text-white transition-colors">
                         <input
                           type="checkbox"
-                          checked={charts.ascent.accentThemeMatch !== false}
-                          onChange={(e) => updateChartModule('ascent', { accentThemeMatch: e.target.checked })}
-                          className="rounded border-white/20 text-[#8ABFFF] focus:ring-0"
+                          checked={charts.ascent.animation?.enabled !== false}
+                          onChange={(e) => updateChartAnimation({ enabled: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
                         />
-                        <span className="text-xs text-[#A7B4C7]">
-                          Dynamically match curve to site accent colors
-                        </span>
+                        <div>
+                          <div className="font-semibold text-white">Enable Tour Engine</div>
+                          <div className="text-[10px] text-[#A7B4C7]">Play trajectory with milestone stops</div>
+                        </div>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/10 cursor-pointer text-xs text-[#A7B4C7] hover:text-white transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.autoPlay || false}
+                          onChange={(e) => updateChartAnimation({ autoPlay: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <div>
+                          <div className="font-semibold text-white">Autoplay on Load</div>
+                          <div className="text-[10px] text-[#A7B4C7]">Starts playback automatically</div>
+                        </div>
                       </label>
                     </div>
 
+                    {/* Milestone Pause Duration Slider */}
+                    <div className="p-2.5 bg-[#111B2B] rounded-lg border border-white/10 space-y-2">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-mono text-white font-medium">Milestone Stop Pause Duration:</span>
+                        <span className="font-mono text-amber-300 font-bold px-2 py-0.5 rounded bg-amber-500/10 border border-amber-500/20">
+                          {((charts.ascent.animation?.pauseDurationMs || 2400) / 1000).toFixed(1)}s Pause
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min="800"
+                        max="5000"
+                        step="200"
+                        value={charts.ascent.animation?.pauseDurationMs || 2400}
+                        onChange={(e) => updateChartAnimation({ pauseDurationMs: Number(e.target.value) })}
+                        className="w-full accent-[#8ABFFF] cursor-pointer"
+                      />
+                      <div className="flex items-center gap-2 pt-1">
+                        <span className="text-[10px] font-mono text-[#A7B4C7]">Presets:</span>
+                        {[
+                          { label: '1.5s Fast', val: 1500 },
+                          { label: '2.4s Standard', val: 2400 },
+                          { label: '3.5s Deliberate', val: 3500 },
+                        ].map((p) => (
+                          <button
+                            key={p.val}
+                            type="button"
+                            onClick={() => updateChartAnimation({ pauseDurationMs: p.val })}
+                            className={`px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer border ${
+                              (charts.ascent.animation?.pauseDurationMs || 2400) === p.val
+                                ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF] font-bold'
+                                : 'bg-[#0B1425] text-[#A7B4C7] border-white/10 hover:text-white'
+                            }`}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Tracer Comet Style Selection */}
                     <div>
-                      <label className="block text-[11px] font-mono text-white font-semibold mb-1">
-                        Default Mobile View Layout
+                      <label className="block text-[11px] font-mono text-[#A7B4C7] mb-1.5">
+                        Animation Tracer Head Style
                       </label>
-                      <div className="flex items-center gap-2 mt-1">
-                        <button
-                          type="button"
-                          onClick={() => updateChartModule('ascent', { defaultMobileView: 'stepper' })}
-                          className={`px-3 py-1 rounded text-xs font-mono font-semibold border transition-all cursor-pointer ${
-                            charts.ascent.defaultMobileView !== 'curve'
-                              ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF]'
-                              : 'bg-[#111B2B] text-[#A7B4C7] border-white/10'
-                          }`}
-                        >
-                          Milestones Stepper
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => updateChartModule('ascent', { defaultMobileView: 'curve' })}
-                          className={`px-3 py-1 rounded text-xs font-mono font-semibold border transition-all cursor-pointer ${
-                            charts.ascent.defaultMobileView === 'curve'
-                              ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF]'
-                              : 'bg-[#111B2B] text-[#A7B4C7] border-white/10'
-                          }`}
-                        >
-                          Trajectory Curve
-                        </button>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {[
+                          { id: 'golden-comet', label: 'Golden Comet', color: '#F59E0B' },
+                          { id: 'cyan-spark', label: 'Cyan Laser', color: '#38BDF8' },
+                          { id: 'emerald-beam', label: 'Thistle Emerald', color: '#10B981' },
+                          { id: 'royal-flame', label: 'Royal Flame', color: '#A855F7' },
+                        ].map((tr) => (
+                          <button
+                            key={tr.id}
+                            type="button"
+                            onClick={() => updateChartAnimation({ tracerStyle: tr.id as any })}
+                            className={`p-2 rounded-lg border text-left text-xs font-mono transition-all cursor-pointer flex items-center gap-1.5 ${
+                              (charts.ascent.animation?.tracerStyle || 'golden-comet') === tr.id
+                                ? 'bg-white/10 border-white/40 text-white font-bold shadow-md'
+                                : 'bg-[#111B2B] border-white/10 text-[#A7B4C7] hover:text-white'
+                            }`}
+                          >
+                            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tr.color }} />
+                            <span className="truncate">{tr.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Checkboxes: Floating Card, Confetti, Fanfare Chime, Loop */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-[#A7B4C7]">
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.showFloatingMilestoneCard !== false}
+                          onChange={(e) => updateChartAnimation({ showFloatingMilestoneCard: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <span>Floating in-chart milestone spotlight card</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.showCrownCelebration !== false}
+                          onChange={(e) => updateChartAnimation({ showCrownCelebration: e.target.checked })}
+                          className="rounded border-white/20 text-amber-400"
+                        />
+                        <span>World Champion crown celebration sparkles</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.soundEffectsEnabled || false}
+                          onChange={(e) => updateChartAnimation({ soundEffectsEnabled: e.target.checked })}
+                          className="rounded border-white/20 text-amber-400"
+                        />
+                        <span>Web Audio milestone arrival chime fanfare</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.loopAnimation !== false}
+                          onChange={(e) => updateChartAnimation({ loopAnimation: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <span>Infinite tour loop upon reaching peak</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* =====================================================================
+                      2. CURVE GEOMETRY & VISUAL ARCHITECTURE
+                     ===================================================================== */}
+                  <div className="p-3.5 bg-[#0B1425] rounded-xl border border-white/10 space-y-3">
+                    <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+                      <TrendingUp className="w-3.5 h-3.5 text-[#8ABFFF]" />
+                      <span>Curve Geometry & Visual Architecture</span>
+                    </h4>
+
+                    {/* Curve Geometry: Spline vs Linear vs Stepped */}
+                    <div>
+                      <label className="block text-[11px] font-mono text-[#A7B4C7] mb-1">
+                        Curve Spline Geometry
+                      </label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'spline', label: 'Smooth Spline', desc: 'Flowing natural trajectory' },
+                          { id: 'linear', label: 'Direct Linear', desc: 'Sharp vector chords' },
+                          { id: 'stepped', label: 'RSPBA Stepped', desc: 'Step-level promotions' },
+                        ].map((cs) => (
+                          <button
+                            key={cs.id}
+                            type="button"
+                            onClick={() => updateChartModule('ascent', { curveStyle: cs.id as any })}
+                            className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
+                              (charts.ascent.curveStyle || 'spline') === cs.id
+                                ? 'bg-[#8ABFFF]/20 border-[#8ABFFF] text-white font-bold'
+                                : 'bg-[#111B2B] border-white/10 text-[#A7B4C7] hover:text-white'
+                            }`}
+                          >
+                            <div className="text-xs font-mono">{cs.label}</div>
+                            <div className="text-[9px] text-[#A7B4C7]">{cs.desc}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Stroke Weight & Node Marker Style */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-mono text-[#A7B4C7] mb-1">
+                          Curve Line Stroke Weight
+                        </label>
+                        <div className="flex items-center gap-1.5">
+                          {(['fine', 'medium', 'bold', 'ultra'] as const).map((w) => (
+                            <button
+                              key={w}
+                              type="button"
+                              onClick={() => updateChartModule('ascent', { curveStrokeWidth: w })}
+                              className={`px-2.5 py-1 rounded text-xs font-mono capitalize border transition-all cursor-pointer ${
+                                (charts.ascent.curveStrokeWidth || 'medium') === w
+                                  ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF] font-bold'
+                                  : 'bg-[#111B2B] text-[#A7B4C7] border-white/10'
+                              }`}
+                            >
+                              {w}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-mono text-[#A7B4C7] mb-1">
+                          Node Milestone Marker Shape
+                        </label>
+                        <div className="flex items-center gap-1.5">
+                          {[
+                            { id: 'rings', label: 'Rings' },
+                            { id: 'shields', label: 'Shields' },
+                            { id: 'diamonds', label: 'Diamonds' },
+                            { id: 'solid', label: 'Solid' },
+                          ].map((nm) => (
+                            <button
+                              key={nm.id}
+                              type="button"
+                              onClick={() => updateChartAnimation({ nodeMarkerStyle: nm.id as any })}
+                              className={`px-2 py-1 rounded text-xs font-mono border transition-all cursor-pointer ${
+                                (charts.ascent.animation?.nodeMarkerStyle || 'rings') === nm.id
+                                  ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF] font-bold'
+                                  : 'bg-[#111B2B] text-[#A7B4C7] border-white/10'
+                              }`}
+                            >
+                              {nm.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Toggle Checks: Show Metric Cards, Gridlines, Node Glow */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-[#A7B4C7]">
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.animation?.showMetricCards !== false}
+                          onChange={(e) => updateChartAnimation({ showMetricCards: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <span>Show 4 Top Metric Cards</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.showGridlines !== false}
+                          onChange={(e) => updateChartModule('ascent', { showGridlines: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <span>Background Gridlines</span>
+                      </label>
+
+                      <label className="flex items-center gap-2 p-2 bg-[#111B2B] rounded-lg border border-white/5 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={charts.ascent.showNodeGlow !== false}
+                          onChange={(e) => updateChartModule('ascent', { showNodeGlow: e.target.checked })}
+                          className="rounded border-white/20 text-[#8ABFFF]"
+                        />
+                        <span>Active Node Neon Glow</span>
+                      </label>
+                    </div>
+
+                    {/* Rival Benchmark Overlay Line */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-2.5 bg-[#111B2B] rounded-lg border border-white/10">
+                      <div>
+                        <label className="block text-[10px] font-mono text-[#A7B4C7] mb-1">
+                          Rival Benchmark Band Name (Overlay)
+                        </label>
+                        <input
+                          type="text"
+                          value={charts.ascent.rivalOverlayBandName || ''}
+                          onChange={(e) => updateChartModule('ascent', { rivalOverlayBandName: e.target.value })}
+                          placeholder="e.g. Field Marshal Montgomery (leave blank to hide)"
+                          className="w-full px-2.5 py-1.5 bg-[#0B1425] border border-white/10 rounded-lg text-xs text-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-mono text-[#A7B4C7] mb-1">
+                          Benchmark Line Color
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="color"
+                            value={charts.ascent.rivalOverlayColor || '#94A3B8'}
+                            onChange={(e) => updateChartModule('ascent', { rivalOverlayColor: e.target.value })}
+                            className="w-8 h-8 rounded border border-white/10 bg-transparent cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={charts.ascent.rivalOverlayColor || '#94A3B8'}
+                            onChange={(e) => updateChartModule('ascent', { rivalOverlayColor: e.target.value })}
+                            className="flex-1 px-2 py-1 bg-[#0B1425] border border-white/10 rounded text-xs font-mono text-white"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Gradient Color Presets */}
+                    <div>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="text-[11px] font-mono text-[#A7B4C7]">
+                          Trajectory Gradient Color Presets
+                        </label>
+                        <span className="text-[10px] font-mono text-[#8ABFFF]">1-CLICK PALETTES</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {[
+                          { name: 'Royal Highland', start: '#8ABFFF', mid: '#4C9FFF', end: '#F59E0B' },
+                          { name: 'Emerald Thistle', start: '#10B981', mid: '#34D399', end: '#FBBF24' },
+                          { name: 'Crimson Flame', start: '#F43F5E', mid: '#FB923C', end: '#FBBF24' },
+                          { name: 'Electric Laser', start: '#06B6D4', mid: '#3B82F6', end: '#A855F7' },
+                        ].map((pal) => (
+                          <button
+                            key={pal.name}
+                            type="button"
+                            onClick={() =>
+                              updateChartModule('ascent', {
+                                trajectoryGradientStart: pal.start,
+                                trajectoryGradientMid: pal.mid,
+                                trajectoryGradientEnd: pal.end,
+                                accentThemeMatch: false,
+                              })
+                            }
+                            className="p-2 rounded-lg bg-[#111B2B] hover:bg-white/5 border border-white/10 text-left transition-all cursor-pointer"
+                          >
+                            <div className="text-[11px] font-bold text-white mb-1">{pal.name}</div>
+                            <div className="h-2 rounded-full w-full" style={{ background: `linear-gradient(to right, ${pal.start}, ${pal.mid}, ${pal.end})` }} />
+                          </button>
+                        ))}
                       </div>
                     </div>
                   </div>
 
-                  {/* Historical Campaign Presets */}
+                  {/* =====================================================================
+                      3. BAND ERA ARCHIVE PRESETS
+                     ===================================================================== */}
                   <div className="p-3 bg-[#0B1425] rounded-xl border border-white/10 space-y-2">
                     <div className="flex items-center justify-between">
                       <label className="block text-[11px] font-mono text-white font-semibold">
-                        Load Band Era Presets
+                        Load Historic Band Era Campaigns
                       </label>
-                      <span className="text-[10px] font-mono text-[#8ABFFF]">ARCHIVE ARCHETYPES</span>
+                      <span className="text-[10px] font-mono text-[#8ABFFF]">4 HISTORIC PRESETS</span>
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                       <button
                         type="button"
                         onClick={() => handleApplyMilestonePreset('inveraray')}
@@ -1101,70 +1460,14 @@ export const AdminPanel: React.FC = () => {
                         <div className="text-xs font-bold text-white group-hover:text-emerald-300">Field Marshal (FMM)</div>
                         <div className="text-[10px] text-[#A7B4C7]">13 World Titles & Grand Slams</div>
                       </button>
-                    </div>
-                  </div>
-
-                  {/* Visual Trajectory Curve Styling */}
-                  <div className="p-3 bg-[#0B1425] rounded-xl border border-white/10 space-y-3">
-                    <label className="block text-[11px] font-mono text-white font-semibold">
-                      Curve Line & Node Styling
-                    </label>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      <div>
-                        <span className="block text-[10px] font-mono text-[#A7B4C7] mb-1">Curve Stroke Weight</span>
-                        <div className="flex items-center gap-1.5">
-                          {(['fine', 'medium', 'bold'] as const).map((w) => (
-                            <button
-                              key={w}
-                              type="button"
-                              onClick={() => updateChartModule('ascent', { curveStrokeWidth: w })}
-                              className={`px-2.5 py-1 rounded text-xs font-mono capitalize border transition-all cursor-pointer ${
-                                (charts.ascent.curveStrokeWidth || 'medium') === w
-                                  ? 'bg-[#8ABFFF] text-[#0B1425] border-[#8ABFFF] font-bold'
-                                  : 'bg-[#111B2B] text-[#A7B4C7] border-white/10'
-                              }`}
-                            >
-                              {w}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="block text-[10px] font-mono text-[#A7B4C7] mb-1">Grid & Glow</span>
-                        <div className="space-y-1">
-                          <label className="flex items-center gap-2 cursor-pointer text-xs text-[#A7B4C7]">
-                            <input
-                              type="checkbox"
-                              checked={charts.ascent.showGridlines !== false}
-                              onChange={(e) => updateChartModule('ascent', { showGridlines: e.target.checked })}
-                              className="rounded border-white/20 text-[#8ABFFF]"
-                            />
-                            <span>Background Gridlines</span>
-                          </label>
-                          <label className="flex items-center gap-2 cursor-pointer text-xs text-[#A7B4C7]">
-                            <input
-                              type="checkbox"
-                              checked={charts.ascent.showNodeGlow !== false}
-                              onChange={(e) => updateChartModule('ascent', { showNodeGlow: e.target.checked })}
-                              className="rounded border-white/20 text-[#8ABFFF]"
-                            />
-                            <span>Active Node Neon Glow</span>
-                          </label>
-                        </div>
-                      </div>
-
-                      <div>
-                        <span className="block text-[10px] font-mono text-[#A7B4C7] mb-1">Rival Benchmark Overlay</span>
-                        <input
-                          type="text"
-                          value={charts.ascent.rivalOverlayBandName || ''}
-                          onChange={(e) => updateChartModule('ascent', { rivalOverlayBandName: e.target.value })}
-                          placeholder="e.g. Field Marshal Montgomery (leave blank to hide)"
-                          className="w-full px-2 py-1 bg-[#111B2B] border border-white/10 rounded text-xs text-white"
-                        />
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleApplyMilestonePreset('shotts')}
+                        className="p-2 rounded-lg bg-[#111B2B] hover:bg-purple-500/15 border border-white/10 hover:border-purple-500/40 text-left transition-all cursor-pointer group"
+                      >
+                        <div className="text-xs font-bold text-white group-hover:text-purple-300">Shotts & Dykehead</div>
+                        <div className="text-[10px] text-[#A7B4C7]">16 World Titles & Duthart Legacy</div>
+                      </button>
                     </div>
                   </div>
 
@@ -1397,6 +1700,27 @@ export const AdminPanel: React.FC = () => {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+
+                  {/* Live Interactive Ascent Chart Preview */}
+                  <div className="p-3.5 bg-[#0B1425] rounded-xl border border-white/10 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        <h4 className="text-xs font-bold text-white uppercase tracking-wider font-mono">
+                          Live Interactive Chart Simulator
+                        </h4>
+                      </div>
+                      <span className="text-[10px] font-mono text-[#8ABFFF] bg-[#8ABFFF]/15 px-2 py-0.5 rounded border border-[#8ABFFF]/30">
+                        REAL-TIME TEST BENCH
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#A7B4C7]">
+                      Test your animation speeds, milestone stops, and curve styles directly in this simulator before publishing.
+                    </p>
+                    <div className="pt-1">
+                      <GradeProgressionChart ascent={charts.ascent} inAdminPreview={true} />
                     </div>
                   </div>
                 </div>
