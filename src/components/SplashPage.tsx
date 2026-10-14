@@ -336,7 +336,7 @@ export const SplashPage: React.FC = () => {
             title="Preview animated RSPBA competitive grade ascent chart"
           >
             <TrendingUp className="w-3 h-3 text-[#8ABFFF]" />
-            <span>Preview Animated Ascent</span>
+            <span>chart</span>
           </button>
         </div>
 
